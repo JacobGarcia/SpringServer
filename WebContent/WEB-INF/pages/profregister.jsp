@@ -8,7 +8,7 @@
     ================================================== -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-     <title>Web University</title>
+     <title>Professors Registration</title>
 
     <!-- Mobile Specific Metas
     ================================================== -->
@@ -37,15 +37,16 @@
     <link id="switcher" href="css/themes/default-theme.css" rel="stylesheet">
     <!-- Main structure css file -->
     <link href="css/style.css" rel="stylesheet">
+    <!-- Custom css file -->
+    <link href="css/mystyles.css" rel="stylesheet">
    
     <!-- Google fonts -->
     <link href='http://fonts.googleapis.com/css?family=Merriweather' rel='stylesheet' type='text/css'>   
     <link href='http://fonts.googleapis.com/css?family=Varela' rel='stylesheet' type='text/css'>    
- 
+  
   </head>
-  <body>    
-
-    <!--=========== BEGIN HEADER SECTION ================-->
+  <body>
+   <!--=========== BEGIN HEADER SECTION ================-->
     <header id="header">
       <!-- BEGIN MENU -->
       <div class="menu_area">
@@ -81,7 +82,7 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Students<span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="studregister.html">Students Registration</a></li>
+                    <li><a href="404.html">Students Registration</a></li>
                     <li><a href="#">Course Registration</a></li>            
                   </ul>
                 </li>               
@@ -103,37 +104,43 @@
     </header>
     <!--=========== END HEADER SECTION ================--> 
 
-    <!--=========== BEGIN SLIDER SECTION ================-->
-    <section id="slider">
-      <div class="row">
-        <div class="col-lg-12 col-md-12">
-          <div class="slider_area">
-            <!-- Start super slider -->
-            <div id="slides">
-              <ul class="slides-container">                          
-                <li>
-                  <img src="img/slider/2.jpg" alt="img">
-                  </li>
-                <!-- Start single slider-->
-                <li>
-                  <img src="img/slider/3.jpg" alt="img">
-                </li>
-                <!-- Start single slider-->
-                <li>
-                  <img src="img/slider/4.jpg" alt="img">
-                </li>
-              </ul>
-              <nav class="slides-navigation">
-                <a href="#" class="next"></a>
-                <a href="#" class="prev"></a>
-              </nav>
-            </div>
-          </div>
-        </div>
-      </div>
+    <!--=========== BEGIN COURSE BANNER SECTION ================-->
+    <section id="imgBanner">
+      <h2>Professor Registration</h2>
     </section>
-    <!--=========== END SLIDER SECTION ================-->
+    <!--=========== END COURSE BANNER SECTION ================-->
+    
+    <!--=========== BEGIN CONTACT SECTION ================-->
+    <section id="contact">
+      <div class="container">
+       <div class="row">
+         <div class="col-lg-8 col-md-8 col-sm-8">
+           <div class="contact_form wow fadeInLeft">
+              <form class="submitphoto_form" action="profregister/post" method="get">
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Social Number" required name="sn">
+                <input type="text" class="wp-form-control wpcf7-email" placeholder="Name" name="name" required>       
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Address" name="address" required>
+                <input type="number" class="wp-form-control wpcf7-text" placeholder="Salary" name="salary" required>
+                <input type="date" class="wp-form-control wpcf7-text" placeholder="Birth Date" name="birth" required >
+                <input type="number" class="wp-form-control wpcf7-text" placeholder="Department Number" name="department" required>
+                <input type="radio" name="gender" value="M" checked> <label for="Male">Male</label>
+                <input type="radio" name="gender" value="F"><label for="Female">Female</label>   
+                <input type="radio" name="gender" value="O"><label for="Other">Other</label>   
+                <br>
+                <input type="submit" value="Register" name="bAction" class="wpcf7-submit">
+                <input type="submit" value="Query" name="bAction" class="wpcf7-submit" formnovalidate>
+                <input type="submit" value="Query By S.N." name="bAction" class="wpcf7-submit" formnovalidate>
+                <input type="submit" value="Query By Department" name="bAction" class="wpcf7-submit" formnovalidate>
+                <input type="submit" value="Query By Gender"  name="bAction" class="wpcf7-submit" formnovalidate>
+              </form>
+           </div>
+         </div>
+        </div>
+      </div>]
+    </section>
+    <!--=========== END CONTACT SECTION ================-->
 
+  
     <!-- Javascript Files
     ================================================== -->
 

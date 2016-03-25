@@ -1,5 +1,17 @@
 package com.joe.project;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+
+import javax.json.Json;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,6 +23,24 @@ import com.joe.project.StoreDAO;
 
 @Controller
 public class SpringClassController {
+	 /** Define a host server */
+    String host;
+    
+    /** Define a port */
+    int port;
+
+    StringBuffer instr;
+    String TimeStamp;
+    
+    public SpringClassController() {
+   	 /** Define a host server */
+        host = "localhost";
+        
+        /** Define a port */
+        port = 19999;
+
+        instr = new StringBuffer();
+	}
 
 	private StoreDAO dao;
 	
@@ -29,6 +59,28 @@ public class SpringClassController {
 		}
 		
 		return new ModelAndView("redirect:/login");
+	}
+	
+	@RequestMapping("/profregister")
+	public ModelAndView renderProfRegister(){
+		if (this.sessionBean.isLogged) {
+			return new ModelAndView("profregister");
+		}
+		
+		return new ModelAndView("redirect:/login");
+	}
+	
+	@RequestMapping("/profregister/post")
+	public ModelAndView postProfessorRegister(@RequestParam("sn")String sn, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("salary")String salary, @RequestParam("birth")String birth, @RequestParam("department")String department, @RequestParam("gender")String gender, @RequestParam("bAction")String bAction){
+		System.out.println("Action Triggered");
+		JsonObjectBuilder builder = Json.createObjectBuilder().add("sn", sn).add("name", name).add("address", address).add("salary", salary).add("birth", birth).add("department", department).add("gender", gender).add("bAction", bAction);
+		JsonObject jObject = builder.build();
+		
+		System.out.println(jObject.toString());
+		/* Socket generation */
+		transferData(jObject);
+		
+		return new ModelAndView("redirect:/profregister");
 	}
 	
 	@RequestMapping("/login")
@@ -61,6 +113,59 @@ public class SpringClassController {
 		
 		this.sessionBean.isLogged = true;
 		return new ModelAndView("redirect:/home");
+	}
+	
+	private void transferData(JsonObject jObject){
+	    System.out.println("SocketClient initialized");
+	    try {
+	        /** Obtain an address object of the server */
+	        InetAddress address = InetAddress.getByName(host);
+	        /** Establish a socket connection */
+	        Socket connection = new Socket(address, port);
+	        
+	        /** Instantiate a BufferedOutputStream object */
+	        BufferedOutputStream bos = new BufferedOutputStream(connection.
+	            getOutputStream());
+
+	        /** Instantiate an OutputStreamWriter object with the optional character
+	         * encoding.
+	         */
+	        OutputStreamWriter osw = new OutputStreamWriter(bos);
+	        
+	        String jString = jObject.toString();
+	        jString = jString + (char) 13;
+	        /** Write across the socket connection and flush the buffer */
+	        osw.write(jString);
+	        osw.flush();
+	        
+	        /** Instantiate a BufferedInputStream object for reading
+	        /** Instantiate a BufferedInputStream object for reading
+	         * incoming socket streams.
+	         */
+
+	        BufferedInputStream bis = new BufferedInputStream(connection.
+	            getInputStream());
+	        /**Instantiate an InputStreamReader with the optional
+	         * character encoding.
+	         */
+
+	        InputStreamReader isr = new InputStreamReader(bis, "US-ASCII");
+
+	        /**Read the socket's InputStream and append to a StringBuffer */
+	        int c;
+	        while ( (c = isr.read()) != 13)
+	          instr.append( (char) c);
+
+	        /** Close the socket connection. */
+	        connection.close();
+	        System.out.println(instr);
+	       }
+	      catch (IOException f) {
+	        System.out.println("IOException: " + f);
+	      }
+	      catch (Exception g) {
+	        System.out.println("Exception: " + g);
+	      }
 	}
 
 }
