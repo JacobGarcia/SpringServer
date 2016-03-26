@@ -36,4 +36,14 @@ public class StoreDAO {
 
 		return results.size();
 	}
+	
+	public void doLog(Object[] params){
+		int types[] = new int[]{Types.VARCHAR, Types.VARCHAR};
+		String insertSql = "INSERT INTO Log (user, action) VALUES (?, ?)";
+		
+		// execute insert query to insert the data
+		// return number of row / rows processed by the executed query
+		int row = this.access.update(insertSql, params, types);
+		System.out.println(row + " row inserted.");
+	}
 }

@@ -8,10 +8,6 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
-import javax.json.Json;
-import javax.json.JsonObject;
-import javax.json.JsonObjectBuilder;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,9 +24,6 @@ public class SpringClassController {
     
     /** Define a port */
     int port;
-
-    StringBuffer instr;
-    String TimeStamp;
     
     public SpringClassController() {
    	 /** Define a host server */
@@ -38,8 +31,6 @@ public class SpringClassController {
         
         /** Define a port */
         port = 19999;
-
-        instr = new StringBuffer();
 	}
 
 	private StoreDAO dao;
@@ -73,12 +64,11 @@ public class SpringClassController {
 	@RequestMapping("/profregister/post")
 	public ModelAndView postProfessorRegister(@RequestParam("sn")String sn, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("salary")String salary, @RequestParam("birth")String birth, @RequestParam("department")String department, @RequestParam("gender")String gender, @RequestParam("bAction")String bAction){
 		System.out.println("Action Triggered");
-		JsonObjectBuilder builder = Json.createObjectBuilder().add("sn", sn).add("name", name).add("address", address).add("salary", salary).add("birth", birth).add("department", department).add("gender", gender).add("bAction", bAction);
-		JsonObject jObject = builder.build();
-		
-		System.out.println(jObject.toString());
+		String object = bAction + "_" + sn + "_" + name  + "_" + address + "_" + salary + "_" + birth + "_" + gender + "_" + department;
+
+		System.out.println(object);
 		/* Socket generation */
-		transferData(jObject);
+		transferData(object);
 		
 		return new ModelAndView("redirect:/profregister");
 	}
@@ -98,6 +88,7 @@ public class SpringClassController {
 		}
 		
 		this.sessionBean.isLogged = true;
+		this.sessionBean.username = username;
 		return new ModelAndView("redirect:/home");
 	}
 	
@@ -107,15 +98,16 @@ public class SpringClassController {
 	}
 	
 	@RequestMapping("/signup/user")
-	public ModelAndView addRow(@RequestParam("username")Object username, @RequestParam("password")Object password, @RequestParam("bSignup")Object button){
+	public ModelAndView addRow(@RequestParam("username")String username, @RequestParam("password")String password, @RequestParam("bSignup")String button){
 		Object[] params = new Object[]{username, password};
 		dao.doSignup(params);
 		
 		this.sessionBean.isLogged = true;
+		this.sessionBean.username = username;
 		return new ModelAndView("redirect:/home");
 	}
 	
-	private void transferData(JsonObject jObject){
+	private void transferData(String jObject){
 	    System.out.println("SocketClient initialized");
 	    try {
 	        /** Obtain an address object of the server */
@@ -132,10 +124,9 @@ public class SpringClassController {
 	         */
 	        OutputStreamWriter osw = new OutputStreamWriter(bos);
 	        
-	        String jString = jObject.toString();
-	        jString = jString + (char) 13;
+	        jObject = jObject + (char) 13;
 	        /** Write across the socket connection and flush the buffer */
-	        osw.write(jString);
+	        osw.write(jObject);
 	        osw.flush();
 	        
 	        /** Instantiate a BufferedInputStream object for reading
@@ -153,11 +144,17 @@ public class SpringClassController {
 
 	        /**Read the socket's InputStream and append to a StringBuffer */
 	        int c;
+	        StringBuffer instr = new StringBuffer();
 	        while ( (c = isr.read()) != 13)
 	          instr.append( (char) c);
-
+	        
 	        /** Close the socket connection. */
 	        connection.close();
+	        
+	        /* Log to the database */
+	         Object[] params = new Object[]{sessionBean.username, instr};
+	         dao.doLog(params);
+	        
 	        System.out.println(instr);
 	       }
 	      catch (IOException f) {
