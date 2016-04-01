@@ -52,6 +52,19 @@ public class SpringClassController {
 		return new ModelAndView("redirect:/login");
 	}
 	
+	@RequestMapping("/serverResponse")
+	public ModelAndView serverResponse(@RequestParam("datos")String datos){
+		
+		System.out.println("Los datos son: " + datos);
+		
+		if (this.sessionBean.isLogged) {
+			return new ModelAndView("serverResponse", "datos", datos);
+		}
+
+		
+		return new ModelAndView("redirect:/login");
+	}
+	
 	@RequestMapping("/profregister")
 	public ModelAndView renderProfRegister(){
 		if (this.sessionBean.isLogged) {
@@ -65,12 +78,17 @@ public class SpringClassController {
 	public ModelAndView postProfessorRegister(@RequestParam("sn")String sn, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("salary")String salary, @RequestParam("birth")String birth, @RequestParam("department")String department, @RequestParam("gender")String gender, @RequestParam("bAction")String bAction){
 		System.out.println("Action Triggered");
 		String object = bAction + "_" + sn + "_" + name  + "_" + address + "_" + salary + "_" + birth + "_" + gender + "_" + department;
-
-		System.out.println(object);
-		/* Socket generation */
-		transferData(object);
 		
-		return new ModelAndView("redirect:/profregister");
+		System.out.println(object);
+		
+		String resultSet = transferData(object);
+		/* Socket generation */
+		if(resultSet.equals(""))
+			return new ModelAndView("redirect:/profregister");
+		
+		 
+		return new ModelAndView("redirect:/serverResponse", "datos", resultSet);
+		
 	}
 	
 	@RequestMapping("/login")
@@ -107,8 +125,10 @@ public class SpringClassController {
 		return new ModelAndView("redirect:/home");
 	}
 	
-	private void transferData(String jObject){
+	private String transferData(String jObject){
 	    System.out.println("SocketClient initialized");
+	    Object[] params;
+	    String resultSet = "";
 	    try {
 	        /** Obtain an address object of the server */
 	        InetAddress address = InetAddress.getByName(host);
@@ -152,9 +172,19 @@ public class SpringClassController {
 	        connection.close();
 	        
 	        /* Log to the database */
-	         Object[] params = new Object[]{sessionBean.username, instr};
-	         dao.doLog(params);
+	        String[] action = jObject.split("_", 2);
 	        
+	        if(action[0].equals("Register")){
+		        params = new Object[]{sessionBean.username, instr};
+		        dao.doLog(params);
+	        } else{
+	        	String [] log = instr.toString().split("_", 2);
+	        	
+	        	params = new Object[]{sessionBean.username, log[0]};
+	        	dao.doLog(params);
+	        	
+	        	resultSet = log[1];
+	        }
 	        System.out.println(instr);
 	       }
 	      catch (IOException f) {
@@ -163,6 +193,8 @@ public class SpringClassController {
 	      catch (Exception g) {
 	        System.out.println("Exception: " + g);
 	      }
+	    
+	    return resultSet;
 	}
 
 }
