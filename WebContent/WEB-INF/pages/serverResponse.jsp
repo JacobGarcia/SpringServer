@@ -3,10 +3,15 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <%@ page import="java.util.StringTokenizer" %>
 
+<%
+	String datos = request.getParameter("datos");
+%>
+
 <html>
 	<meta charset = "utf-8">
 	<head>
-		<!-- CSS ================================================== -->       
+		    <!-- CSS
+	    ================================================== -->       
 	    <!-- Bootstrap css file-->
 	    <link href="css/bootstrap.min.css" rel="stylesheet">
 	    <!-- Font awesome css file-->
@@ -29,6 +34,21 @@
 		<title>Consulta con JSP</title>
 	</head>
 	<body>
-		${datos}
+		<div class=".CSSTableGenerator">
+			<table border = 1 >
+				<tr><th align="LEFT">Social Security Number</th><th align="LEFT">Name</th><th align="LEFT">Address</th><th align="LEFT">Salary</th><th align="LEFT">Birth Date</th><th align="LEFT">Gender</th><th align="LEFT">Department Number</th></tr>
+				<%
+				System.out.println("Response from page with data: ");
+				System.out.println(datos);
+				StringTokenizer stringTokenizer = new StringTokenizer(datos, "*");
+				while (stringTokenizer.hasMoreTokens()) {
+					StringTokenizer sTokenizer = new StringTokenizer(stringTokenizer.nextToken(), "_");
+				%>
+					<tr><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td></tr>
+				<%
+				}
+				%>
+			</table>
+		</div>
 	</body>
 </html>
