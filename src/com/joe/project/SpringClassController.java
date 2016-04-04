@@ -8,6 +8,8 @@ import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,6 +38,11 @@ public class SpringClassController {
 	private StoreDAO dao;
 	
 	@Autowired
+	private HttpSession httpSession;
+	
+	
+	
+	@Autowired
 	private MySessionBean sessionBean;
 	
 	@Autowired
@@ -53,12 +60,10 @@ public class SpringClassController {
 	}
 	
 	@RequestMapping("/serverResponse")
-	public ModelAndView serverResponse(@RequestParam("datos")String datos){
-		
-		System.out.println("Los datos son: " + datos);
-		
+	public ModelAndView serverResponse(){
+		System.out.println(httpSession.getAttribute("data"));
 		if (this.sessionBean.isLogged) {
-			return new ModelAndView("serverResponse", "datos", datos);
+			return new ModelAndView("serverResponse");
 		}
 
 		
@@ -79,16 +84,21 @@ public class SpringClassController {
 		System.out.println("Action Triggered");
 		String object = bAction + "_" + sn + "_" + name  + "_" + address + "_" + salary + "_" + birth + "_" + gender + "_" + department;
 		
-		System.out.println(object);
-		
 		String resultSet = transferData(object);
+		
 		/* Socket generation */
 		if(resultSet.equals(""))
 			return new ModelAndView("redirect:/profregister");
 		
-		 
-		return new ModelAndView("redirect:/serverResponse", "datos", resultSet);
+		/* Set attribute at the session level */
+		httpSession.setAttribute("data", resultSet);
 		
+		return new ModelAndView("serverResponse");
+		
+	    //return new ModelAndView("serverResponse", "datos", ""+resultSet);
+		//return new ModelAndView("redirect:/serverResponse", "datos", resultSet);
+		
+	    
 	}
 	
 	@RequestMapping("/login")
@@ -178,12 +188,8 @@ public class SpringClassController {
 		        params = new Object[]{sessionBean.username, instr};
 		        dao.doLog(params);
 	        } else{
-	        	String [] log = instr.toString().split("_", 2);
-	        	
-	        	params = new Object[]{sessionBean.username, log[0]};
-	        	dao.doLog(params);
-	        	
-	        	resultSet = log[1];
+
+	        	resultSet = instr.toString();
 	        }
 	        System.out.println(instr);
 	       }
@@ -192,6 +198,7 @@ public class SpringClassController {
 	      }
 	      catch (Exception g) {
 	        System.out.println("Exception: " + g);
+	       
 	      }
 	    
 	    return resultSet;
