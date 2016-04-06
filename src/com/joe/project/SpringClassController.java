@@ -97,9 +97,35 @@ public class SpringClassController {
 		return new ModelAndView("serverResponse");
 		
 	    //return new ModelAndView("serverResponse", "datos", ""+resultSet);
-		//return new ModelAndView("redirect:/serverResponse", "datos", resultSet);
+		//return new ModelAndView("redirect:/serverResponse", "datos", resultSet);    
+	}
+	
+	@RequestMapping("/studregister")
+	public ModelAndView renderStudRegister(){
+		if (this.sessionBean.isLogged) {
+			return new ModelAndView("studregister");
+		}
 		
-	    
+		return new ModelAndView("redirect:/login");
+	}
+	
+	@RequestMapping("/studregister/post")
+	public ModelAndView postStudRegister(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan, @RequestParam("bAction")String bAction){
+		System.out.println("Action Triggered:student reg");
+		String object = bAction + "_" + mat + "_" + name  + "_" + address + "_" + phone + "_" + career + "_" + plan ;
+		System.out.println(object);
+		
+		String resultSet = transferData(object);
+		
+		/* Socket generation */
+		if(resultSet.equals(""))
+			return new ModelAndView("redirect:/studregister");
+		
+		/* Set attribute at the session level */
+		httpSession.setAttribute("data", resultSet);
+		
+		return new ModelAndView("serverResponse");
+		 
 	}
 	
 	@RequestMapping("/login")
@@ -182,24 +208,34 @@ public class SpringClassController {
 	        /** Close the socket connection. */
 	        connection.close();
 	        
-	        /* Log to the database */
+	        /** Log to the database **/
 	        String[] action = jObject.split("_", 2);
-	        
-	        if(action[0].equals("Register")){
-		        params = new Object[]{sessionBean.username, instr};
-		        dao.doLog(params);
-	        } else{
 
-	        	resultSet = instr.toString();
+	        /** Saves the Log Operation when the operation is a success **/
+	        String nuevo=instr.toString();
+	        String[] nuevoArr = nuevo.split(" ");
+	        
+	        if(nuevoArr[0].equals("ERROR"))
+	        {
+	        	System.out.println("NOT INSERTED."+nuevo);
 	        }
-	        System.out.println(instr);
+	        else
+	        {
+	        	if(action[0].equals("Register") || action[0].equals("RegisterStudent") ){
+			        params = new Object[]{sessionBean.username, instr};
+			        dao.doLog(params);
+			        System.out.println("SUCCESS:"+instr);
+		        }
+		         else{
+		        	 resultSet = instr.toString();
+		        }
+	        }
 	       }
 	      catch (IOException f) {
 	        System.out.println("IOException: " + f);
 	      }
 	      catch (Exception g) {
 	        System.out.println("Exception: " + g);
-	       
 	      }
 	    
 	    return resultSet;

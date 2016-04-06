@@ -28,7 +28,7 @@ public class StoreDAO {
 		// execute insert query to insert the data
 		// return number of row / rows processed by the executed query
 		int row = this.access.update(insertSql, params, types);
-		System.out.println(row + " row inserted.");
+		//System.out.println(row + " row inserted.");
 	}
 	
 	public int doAuth(String username, String password){
@@ -44,6 +44,6 @@ public class StoreDAO {
 		// execute insert query to insert the data
 		// return number of row / rows processed by the executed query
 		int row = this.access.update(insertSql, params, types);
-		System.out.println(row + " row inserted.");
+		//System.out.println(row + " row inserted.");
 	}
 }
