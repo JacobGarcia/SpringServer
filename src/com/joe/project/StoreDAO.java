@@ -37,6 +37,12 @@ public class StoreDAO {
 		return results.size();
 	}
 	
+	public int doAuthApi(String apiKey){
+		List<Map<String, Object>> results = this.access.queryForList("SELECT * FROM Api WHERE apikey = '" + apiKey + "'");
+
+		return results.size();
+	}
+	
 	public void doLog(Object[] params){
 		int types[] = new int[]{Types.VARCHAR, Types.VARCHAR};
 		String insertSql = "INSERT INTO Log (user, action) VALUES (?, ?)";

@@ -50,6 +50,28 @@ public class SpringClassController {
 		this.dao = dao;
 	}
 	
+	@RequestMapping("/api")
+	public ModelAndView getApi(@RequestParam("api")String api, @RequestParam("action")String action){
+		/* Check if the API key is valid */
+		int success = dao.doAuthApi(api);
+		
+		if (success == 0) {
+			return new ModelAndView("api", "data", "INVALID API KEY");
+		}
+		
+		if(action.equals("professorSalaries")){
+			String object = "Query" + "_" + "_"  + "_" + "_"  + "_"  + "_"  + "_";
+			String resultSet = transferData(object);
+			
+			return new ModelAndView("api", "data", resultSet);
+		}else if (action.equals("studentCourses")) {
+			
+		}else {
+			return new ModelAndView("api", "data", "UNDEFINED ACTION");
+		}
+		return null;
+	}
+	
 	@RequestMapping("/home")
 	public ModelAndView renderHome(){
 		if (this.sessionBean.isLogged) {
