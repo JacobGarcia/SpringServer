@@ -11,9 +11,6 @@ import java.util.List;
 
 import javax.servlet.http.HttpSession;
 
-import com.joe.project.LogExcel;
-
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,7 +20,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.joe.project.MySessionBean;
 import com.joe.project.StoreDAO;
-
+import com.joe.project.LogExcel;
+//hh
 @Controller
 public class SpringClassController {
 	// COMENTARIO BASE EVE
@@ -45,6 +43,8 @@ public class SpringClassController {
 	
 	@Autowired
 	private HttpSession httpSession;
+	
+	@Autowired
 	private LogExcel logExcel;
 	
 	
@@ -117,9 +117,9 @@ public class SpringClassController {
 	}
 	
 	@RequestMapping(value="/studregister" , params="RegisterStudent",method=RequestMethod.POST )
-	public ModelAndView postStudRegister(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan, @RequestParam("bAction")String bAction){
+	public ModelAndView postStudRegister(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan){
 		System.out.println("Action Triggered:student reg");
-		String object = bAction + "_" + mat + "_" + name  + "_" + address + "_" + phone + "_" + career + "_" + plan ;
+		String object = "RegisterStudent" + "_" + mat + "_" + name  + "_" + address + "_" + phone + "_" + career + "_" + plan ;
 		System.out.println(object);
 		
 		String resultSet = transferData(object);
@@ -135,17 +135,26 @@ public class SpringClassController {
 		 
 	}
 	
-	@RequestMapping(value="/studRegister", params="leerExcelLog", method=RequestMethod.POST)
-	public ModelAndView leerExcel()
-	{
-		System.out.println("Action Triggered:leerExcel");
+	@RequestMapping(value="/studregister", params="leerExcelLog", method=RequestMethod.POST)
+	public ModelAndView leerExcel(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan){
+		System.out.println("Action Triggered:leerExcel_");
 		String message="";
-		List<String> excelList= logExcel.readExcel();
+		String resultSet="";
+		List<String> excelList= logExcel.readExcel(); 
 		for (String reg : excelList) 
 		{
 			 System.out.println("voy a mandar a BD :"+reg);
+			 resultSet = transferData(reg);
 		}
-		return new ModelAndView("insertar","msg",message);
+		
+		/* Socket generation */
+		if(resultSet.equals(""))
+			return new ModelAndView("redirect:/studregister");
+		
+		/* Set attribute at the session level */
+		httpSession.setAttribute("data", resultSet);
+		
+		return new ModelAndView("serverResponse");
 	}
 	
 

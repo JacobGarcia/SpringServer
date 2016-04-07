@@ -3,8 +3,12 @@ package com.joe.project;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+//import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import jxl.*;
 import jxl.read.biff.BiffException;
@@ -17,7 +21,10 @@ import jxl.write.WritableWorkbook;
 import jxl.write.WriteException;
 import jxl.write.biff.RowsExceededException;
 
+@Component
 public class LogExcel {
+	
+	
 	public LogExcel()
 	{
 		System.out.println("Creating LogExcel");	
@@ -25,7 +32,6 @@ public class LogExcel {
 	
 	public String devolverObjeto( Sheet sheet1,int row, int nFields)
 	{
-		//List<String> regos = new ArrayList<LogEntry>();
 		String str_aux="";
 			for(int i=3; i<nFields+3; i++)
 			{
@@ -42,10 +48,12 @@ public class LogExcel {
 	
 	public List<String> readExcel()
 	{
+		System.out.println("adgsg9999999999");
 		List<String> logExcel = new ArrayList<String>();
 		int renglones=0;
 		int nFields=0;
 		String dataRead = "";
+		
 		
 		try {
             //Crear un objeto workbook del archivo especificado 
@@ -77,12 +85,12 @@ public class LogExcel {
             			switch(table){
             				case "ALUMNO":
             					nFields=6;
-            					dataRead=devolverObjeto(sheet1,j,nFields);
+            					dataRead="RegisterStudent_"+devolverObjeto(sheet1,j,nFields);
             					logExcel.add(dataRead);
             					break;
             				case "PROFESOR":
             					nFields=7;
-            					dataRead=devolverObjeto(sheet1,j,nFields);
+            					dataRead="Register_"+devolverObjeto(sheet1,j,nFields);
             					logExcel.add(dataRead);
             					break;
             				default: 
