@@ -7,12 +7,17 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.List;
 
 import javax.servlet.http.HttpSession;
+
+import com.joe.project.LogExcel;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -40,7 +45,7 @@ public class SpringClassController {
 	
 	@Autowired
 	private HttpSession httpSession;
-	
+	private LogExcel logExcel;
 	
 	
 	@Autowired
@@ -100,8 +105,10 @@ public class SpringClassController {
 		//return new ModelAndView("redirect:/serverResponse", "datos", resultSet);    
 	}
 	
-	@RequestMapping("/studregister")
+	@RequestMapping(value="/studregister", method=RequestMethod.GET)
 	public ModelAndView renderStudRegister(){
+		System.out.println("INDEX");
+		
 		if (this.sessionBean.isLogged) {
 			return new ModelAndView("studregister");
 		}
@@ -109,7 +116,7 @@ public class SpringClassController {
 		return new ModelAndView("redirect:/login");
 	}
 	
-	@RequestMapping("/studregister/post")
+	@RequestMapping(value="/studregister" , params="RegisterStudent",method=RequestMethod.POST )
 	public ModelAndView postStudRegister(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan, @RequestParam("bAction")String bAction){
 		System.out.println("Action Triggered:student reg");
 		String object = bAction + "_" + mat + "_" + name  + "_" + address + "_" + phone + "_" + career + "_" + plan ;
@@ -127,6 +134,21 @@ public class SpringClassController {
 		return new ModelAndView("serverResponse");
 		 
 	}
+	
+	@RequestMapping(value="/studRegister", params="leerExcelLog", method=RequestMethod.POST)
+	public ModelAndView leerExcel()
+	{
+		System.out.println("Action Triggered:leerExcel");
+		String message="";
+		List<String> excelList= logExcel.readExcel();
+		for (String reg : excelList) 
+		{
+			 System.out.println("voy a mandar a BD :"+reg);
+		}
+		return new ModelAndView("insertar","msg",message);
+	}
+	
+
 	
 	@RequestMapping("/login")
 	public ModelAndView renderLogin(){

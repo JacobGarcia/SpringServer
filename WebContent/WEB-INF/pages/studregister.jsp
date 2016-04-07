@@ -116,15 +116,16 @@
        <div class="row">
          <div class="col-lg-8 col-md-8 col-sm-8">
            <div class="contact_form wow fadeInLeft">
-              <form class="submitphoto_form" action="studregister/post" method="get">
+              <form class="submitphoto_form" action="studregister" method="get">
                 <input type="text" class="wp-form-control wpcf7-text" placeholder="Mat" required name="mat">
-                <input type="text" class="wp-form-control wpcf7-email" placeholder="Name" name="name" required>       
-                <input type="text" class="wp-form-control wpcf7-text" placeholder="Address" name="address" required>
-                <input type="number" class="wp-form-control wpcf7-text" placeholder="Phone" name="phone" required>
-                <input type="text" class="wp-form-control wpcf7-text" placeholder="Career" name="career" required >
-                <input type="number" class="wp-form-control wpcf7-text" placeholder="Plan" name="plan" required>
+                <input type="text" class="wp-form-control wpcf7-email" placeholder="Name" name="name" value="eve" required>       
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Address" name="address" value="hidalgo" required>
+                <input type="number" class="wp-form-control wpcf7-text" placeholder="Phone" name="phone" value="27419932" required>
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Career" name="career" value="isc" required >
+                <input type="number" class="wp-form-control wpcf7-text" placeholder="Plan" name="plan" value="2011" required>
                 <br>
-                <input type="submit" value="RegisterStudent" name="bAction" class="wpcf7-submit">
+                <button type="submit" value="RegisterStudent" name="RegisterStudent" class="wpcf7-submit">
+                <button  type="submit" value="leerExcelLog"  name="leerExcelLog" class="wpcf7-submit">Importar archivo para Tabla Log</button>
               </form>
            </div>
          </div>
