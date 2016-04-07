@@ -21,6 +21,7 @@ import com.joe.project.StoreDAO;
 
 @Controller
 public class SpringClassController {
+	// COMENTARIO BASE EVE
 	 /** Define a host server */
     String host;
     
