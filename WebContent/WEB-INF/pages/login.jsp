@@ -91,8 +91,8 @@
          <div class="col-lg-8 col-md-8 col-sm-8">
            <div class="contact_form wow fadeInLeft">
               <form class="submitphoto_form" action="login/user" method="get">
-                <input type="text" class="wp-form-control wpcf7-text" placeholder="Username" required name="username" value="eve">
-                <input type="password" class="wp-form-control wpcf7-email" placeholder="Password" name="password"  value="eve" required> 
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Username" required name="username" value="">
+                <input type="password" class="wp-form-control wpcf7-email" placeholder="Password" name="password"  value="" required> 
                 <input type="submit" value="LOGIN"  name="bLogin" class="wpcf7-submit" formnovalidate>
               </form>
            </div>

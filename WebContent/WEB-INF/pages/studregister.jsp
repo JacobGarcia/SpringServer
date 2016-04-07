@@ -8,7 +8,7 @@
     ================================================== -->
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-     <title>Professors Registration</title>
+     <title>Students Registration</title>
 
     <!-- Mobile Specific Metas
     ================================================== -->
@@ -82,7 +82,7 @@
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Students<span class="caret"></span></a>
                   <ul class="dropdown-menu" role="menu">
-                    <li><a href="404.html">Students Registration</a></li>
+                    <li><a href="studregister">Students Registration</a></li>
                     <li><a href="#">Course Registration</a></li>            
                   </ul>
                 </li>               
@@ -117,15 +117,16 @@
          <div class="col-lg-8 col-md-8 col-sm-8">
            <div class="contact_form wow fadeInLeft">
               <form class="submitphoto_form" action="studregister" method="post">
-                <input type="text" class="wp-form-control wpcf7-text" placeholder="Mat" required name="mat">
-                <input type="text" class="wp-form-control wpcf7-email" placeholder="Name" name="name" value="eve" required>       
-                <input type="text" class="wp-form-control wpcf7-text" placeholder="Address" name="address" value="hidalgo" required>
-                <input type="number" class="wp-form-control wpcf7-text" placeholder="Phone" name="phone" value="27419932" required>
-                <input type="text" class="wp-form-control wpcf7-text" placeholder="Career" name="career" value="isc" required >
-                <input type="number" class="wp-form-control wpcf7-text" placeholder="Plan" name="plan" value="2011" required>
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Student ID" required name="mat">
+                <input type="text" class="wp-form-control wpcf7-email" placeholder="Name" name="name" value="Julio Hernandez" required>       
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Address" name="address" value="Allende #245" required>
+                <input type="number" class="wp-form-control wpcf7-text" placeholder="Phone" name="phone" value="27419987" required>
+                <input type="text" class="wp-form-control wpcf7-text" placeholder="Career" name="career" value="IMA" required >
+                <input type="number" class="wp-form-control wpcf7-text" placeholder="Plan" name="plan" value="2008" required>
                 <br>
-                <button type="submit" value="RegisterStudent" name="RegisterStudent" class="wpcf7-submit">RegisterStudent</button>
-                <button  type="submit" value="leerExcelLog"  name="leerExcelLog" class="wpcf7-submit">Importar archivo para Tabla Log</button>
+                <button type="submit" value="RegisterStudent" name="RegisterStudent" class="wpcf7-submit">Register Student</button>
+                <button  type="submit" value="leerExcelLog"  name="leerExcelLog" class="wpcf7-submit">Import Log File</button>
+                <button type="submit" value="QueryStudent" name="QueryStudent" class="wpcf7-submit" formnovalidate>Query Students</button>
            </div>
          </div>
         </div>

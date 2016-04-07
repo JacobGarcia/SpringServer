@@ -76,6 +76,16 @@ public class SpringClassController {
 		return new ModelAndView("redirect:/login");
 	}
 	
+	@RequestMapping("/serverResponseStudent")
+	public ModelAndView serverResponseStudent(){
+		System.out.println(httpSession.getAttribute("data"));
+		if (this.sessionBean.isLogged) {
+			return new ModelAndView("serverResponseStudent");
+		}
+
+		return new ModelAndView("redirect:/login");
+	}
+	
 	@RequestMapping("/profregister")
 	public ModelAndView renderProfRegister(){
 		if (this.sessionBean.isLogged) {
@@ -100,14 +110,11 @@ public class SpringClassController {
 		httpSession.setAttribute("data", resultSet);
 		
 		return new ModelAndView("serverResponse");
-		
-	    //return new ModelAndView("serverResponse", "datos", ""+resultSet);
-		//return new ModelAndView("redirect:/serverResponse", "datos", resultSet);    
+		  
 	}
 	
 	@RequestMapping(value="/studregister", method=RequestMethod.GET)
 	public ModelAndView renderStudRegister(){
-		System.out.println("INDEX");
 		
 		if (this.sessionBean.isLogged) {
 			return new ModelAndView("studregister");
@@ -120,45 +127,49 @@ public class SpringClassController {
 	public ModelAndView postStudRegister(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan){
 		System.out.println("Action Triggered:student reg");
 		String object = "RegisterStudent" + "_" + mat + "_" + name  + "_" + address + "_" + phone + "_" + career + "_" + plan ;
-		System.out.println(object);
-		
 		String resultSet = transferData(object);
 		
-		/* Socket generation */
 		if(resultSet.equals(""))
 			return new ModelAndView("redirect:/studregister");
 		
-		/* Set attribute at the session level */
 		httpSession.setAttribute("data", resultSet);
 		
-		return new ModelAndView("serverResponse");
+		return new ModelAndView("serverResponseStudent");
+		 
+	}
+	
+	@RequestMapping(value="/studregister" , params="QueryStudent",method=RequestMethod.POST )
+	public ModelAndView postQueryStudent(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan){
+		
+		String object = "QueryStudent" + "_" + mat + "_" + name  + "_" + address + "_" + phone + "_" + career + "_" + plan ;
+		String resultSet = transferData(object);
+		
+		if(resultSet.equals(""))
+			return new ModelAndView("redirect:/studregister");
+		
+		httpSession.setAttribute("data", resultSet);
+		return new ModelAndView("serverResponseStudent");
 		 
 	}
 	
 	@RequestMapping(value="/studregister", params="leerExcelLog", method=RequestMethod.POST)
 	public ModelAndView leerExcel(@RequestParam("mat")String mat, @RequestParam("name")String name, @RequestParam("address")String address, @RequestParam("phone")String phone, @RequestParam("career")String career, @RequestParam("plan")String plan){
 		System.out.println("Action Triggered:leerExcel_");
-		String message="";
 		String resultSet="";
 		List<String> excelList= logExcel.readExcel(); 
 		for (String reg : excelList) 
 		{
-			 System.out.println("voy a mandar a BD :"+reg);
-			 resultSet = transferData(reg);
+			 resultSet = transferData(reg);	
 		}
 		
-		/* Socket generation */
 		if(resultSet.equals(""))
 			return new ModelAndView("redirect:/studregister");
 		
-		/* Set attribute at the session level */
 		httpSession.setAttribute("data", resultSet);
-		
-		return new ModelAndView("serverResponse");
+		return new ModelAndView("serverResponseStudent");
 	}
 	
 
-	
 	@RequestMapping("/login")
 	public ModelAndView renderLogin(){
 		return new ModelAndView("login");
@@ -232,9 +243,9 @@ public class SpringClassController {
 
 	        /**Read the socket's InputStream and append to a StringBuffer */
 	        int c;
-	        StringBuffer instr = new StringBuffer();
+	        StringBuffer resBuffer = new StringBuffer();
 	        while ( (c = isr.read()) != 13)
-	          instr.append( (char) c);
+	        	resBuffer.append( (char) c);
 	        
 	        /** Close the socket connection. */
 	        connection.close();
@@ -243,22 +254,28 @@ public class SpringClassController {
 	        String[] action = jObject.split("_", 2);
 
 	        /** Saves the Log Operation when the operation is a success **/
-	        String nuevo=instr.toString();
-	        String[] nuevoArr = nuevo.split(" ");
+	        String res=resBuffer.toString();
+	        System.out.println("respuesta="+res);
+	        String[] nuevoArr = res.split(" ");
+	        //System.out.print("actiocs[1]"+action[1]);
 	        
 	        if(nuevoArr[0].equals("ERROR"))
 	        {
-	        	System.out.println("NOT INSERTED."+nuevo);
+	        	resultSet="";
+	        	System.out.println("NOT INSERTED."+res);
 	        }
 	        else
 	        {
 	        	if(action[0].equals("Register") || action[0].equals("RegisterStudent") ){
-			        params = new Object[]{sessionBean.username, instr};
+			        params = new Object[]{sessionBean.username, resBuffer};
 			        dao.doLog(params);
-			        System.out.println("SUCCESS:"+instr);
+			        resultSet=action[1];
+			        System.out.println("SUCCESS:"+resBuffer);
+		        }else if(action[0].equals("Query")||action[0].equals("QueryStudent") ){
+		        	resultSet=res;
 		        }
 		         else{
-		        	 resultSet = instr.toString();
+		        	 resultSet = "";
 		        }
 	        }
 	       }

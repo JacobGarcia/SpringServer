@@ -5,7 +5,6 @@
 
 <%
 	String datos = request.getSession().getAttribute("data").toString();
-	//System.out.println(datos);
 %>
 
 <html>
@@ -32,12 +31,12 @@
 	      <!-- Custom css file -->
    		 <link href="../css/mystyles.css" rel="stylesheet" type="text/css">
 
-		<title>Professors List</title>
+		<title>Students List</title>
 	</head>
 	<body>
 		<div class=".CSSTableGenerator">
 			<table border = 1 >
-				<tr><th align="LEFT">Social Security Number</th><th align="LEFT">Name</th><th align="LEFT">Address</th><th align="LEFT">Salary</th><th align="LEFT">Birth Date</th><th align="LEFT">Gender</th><th align="LEFT">Department Number</th></tr>
+				<tr><th align="LEFT">Student ID</th><th align="LEFT">Name</th><th align="LEFT">Address</th><th align="LEFT">Phone</th><th align="LEFT">Career</th><th align="LEFT">Plan</th></tr>
 				
 				<%
 				System.out.println("Response from page with data: ");
@@ -46,7 +45,7 @@
 				while (stringTokenizer.hasMoreTokens()) {
 					StringTokenizer sTokenizer = new StringTokenizer(stringTokenizer.nextToken(), "_");
 				%>
-					<tr><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td></tr>
+					<tr><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td><td><%=sTokenizer.nextToken()%></td></tr>
 				<%
 				}
 				%>
