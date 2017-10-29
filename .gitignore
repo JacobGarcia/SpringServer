@@ -1,0 +1,12 @@
+.classpath
+.project
+.settings/
+
+# Temporal OSX files
+.DS_Store
+
+# Dependency directories
+node_modules/
+
+# Static Files
+static/uploads
